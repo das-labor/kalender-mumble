@@ -16,14 +16,14 @@ def set_mumble(event, start, end):
     if event is not None:
 
         relname = None
-        if start < now:
+        if start > now:
             timediff = now - start
             relname = "in {} minuten".format(timediff.seconds // 60)
         else:
-            timediff = now - end
+            timediff = end - now
             relname = "noch {} minuten".format(timediff.seconds // 60)
 
-        state.name = "[{}] Veranstaltung: {}".format(relname, selected_event.decoded("summary"))
+        state.name = "[{}] Veranstaltung: {}".format(relname, event.decoded("summary"))
     else:
         state.name = "Veranstaltung: Keine Aktive Veranstaltung"
 
@@ -44,7 +44,8 @@ selected_event = None
 for event in cal.subcomponents:
     start = event.decoded("dtstart")
     end = event.decoded("dtend", None)
-    if isinstance(start, datetime.date):
+    if not isinstance(start, datetime.datetime):
+        print("Warning: {} has no time set".format(event.decoded("summary")))
         start = datetime.datetime.combine(start, datetime.datetime.min.time())
     if end is None:
         end = start + datetime.timedelta(0, 0, 0, 0, 0, 2)
