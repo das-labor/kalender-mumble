@@ -8,23 +8,25 @@ import os
 
 def set_mumble(event, start, end):
     s = mice.murmur.getAllServers()[0]
-    state = s.getChannelState(os.environ['CHANNEL_ID'])
+    state = s.getChannelState(int(os.environ['CHANNEL_ID']))
     now = datetime.datetime.now()
 
 
-    if selected_event is not None:
+    if event is not None:
 
         relname = None
         if start < now:
             timediff = now - start
-            relname = "in {} minuten".format(timediff.minute + timediff.hour * 60)
+            relname = "in {} minuten".format(timediff.seconds // 60)
         else:
             timediff = now - end
-            relname = "noch {} minuten".format(timediff.minute + timediff.hour * 60)
+            relname = "noch {} minuten".format(timediff.seconds // 60)
 
-        state.name = "[{}] Veranstaltung: {}".format(relname, selected_event.get("summary"))
+        state.name = "[{}] Veranstaltung: {}".format(relname, selected_event.decoded("summary"))
     else:
-        state.name = "Veranstaltung: Keine Aktive"
+        state.name = "Veranstaltung: Keine Aktive Veranstaltung"
+
+    s.setChannelState(state)
 
 r = requests.get("https://das-labor.org/termine.ics")
 data = r.text
@@ -34,10 +36,9 @@ cal = icalendar.Calendar.from_ical(data)
 start_date = datetime.datetime.now() - datetime.timedelta(1, 0, 0, 0, 30)
 end_date = datetime.datetime.now() + datetime.timedelta(1, 0, 0, 0, 0)
 
-selected_event = None
-valid_events = 0
-
 print("Checking between {} and {}".format(start_date, end_date))
+
+selected_event = None
 
 for event in cal.subcomponents:
     start = event.decoded("dtstart")
@@ -47,9 +48,9 @@ for event in cal.subcomponents:
     if end is None:
         end = start + datetime.timedelta(0, 0, 0, 0, 0, 2)
 
-    valid_events += 1
     if start > start_date and end < end_date:
-        selected_event = event
-        set_mumble(event, start, end)
+        selected_event = (event, start, end)
 
+
+set_mumble(*selected_event)
 
