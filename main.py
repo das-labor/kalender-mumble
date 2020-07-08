@@ -39,7 +39,7 @@ end_date = datetime.datetime.now()
 
 print("Checking between {} and {}".format(start_date, end_date))
 
-selected_event = None
+selected_event = (None, None, None)
 
 for event in cal.subcomponents:
     start = event.decoded("dtstart")
