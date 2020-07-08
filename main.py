@@ -17,11 +17,11 @@ def set_mumble(event, start, end):
 
         relname = None
         if start > now:
-            timediff = now - start
-            relname = "in {} minuten".format(timediff.seconds // 60)
+            timediff = start - now
+            relname = "in {} minuten".format(timediff.total_seconds() // 60)
         else:
             timediff = end - now
-            relname = "noch {} minuten".format(timediff.seconds // 60)
+            relname = "noch {} minuten".format(timediff.total_seconds() // 60)
 
         state.name = "[{}] Veranstaltung: {}".format(relname, event.decoded("summary"))
     else:
@@ -34,8 +34,8 @@ data = r.text
 
 cal = icalendar.Calendar.from_ical(data)
 
-start_date = datetime.datetime.now() - datetime.timedelta(1, 0, 0, 0, 30)
-end_date = datetime.datetime.now() + datetime.timedelta(1, 0, 0, 0, 0)
+start_date = datetime.datetime.now() - datetime.timedelta(minutes=30)
+end_date = datetime.datetime.now()
 
 print("Checking between {} and {}".format(start_date, end_date))
 
