@@ -3,10 +3,11 @@ import datetime
 
 import requests
 import icalendar
-import mice
 import os
 
 def set_mumble(event, start, end):
+    import mice
+
     s = mice.murmur.getAllServers()[0]
     state = s.getChannelState(int(os.environ['CHANNEL_ID']))
     now = datetime.datetime.now()
@@ -44,11 +45,12 @@ for event in cal.subcomponents:
     start = event.decoded("dtstart")
     end = event.decoded("dtend", None)
     if isinstance(start, datetime.date):
-        start = datetime.datetime.combine(start.today(), datetime.datetime.min.time())
+        start = datetime.datetime.combine(start, datetime.datetime.min.time())
     if end is None:
         end = start + datetime.timedelta(0, 0, 0, 0, 0, 2)
 
     if start > start_date and end < end_date:
+        print("{} - {}: {}".format(start, end, event.decoded("summary")))
         selected_event = (event, start, end)
 
 
