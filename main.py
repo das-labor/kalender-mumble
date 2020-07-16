@@ -48,7 +48,7 @@ for event in cal.subcomponents:
         print("Warning: {} has no time set".format(event.decoded("summary")))
         start = datetime.datetime.combine(start, datetime.datetime.min.time())
     if end is None:
-        end = start + datetime.timedelta(0, 0, 0, 0, 0, 2)
+        end = start + datetime.timedelta(hours=2)
 
     if start > start_date and end < end_date:
         print("{} - {}: {}".format(start, end, event.decoded("summary")))
