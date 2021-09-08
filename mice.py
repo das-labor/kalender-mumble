@@ -76,7 +76,7 @@ else:
     slicedir = ['-I' + slicedir]
 
 try:
-    print "Trying to retrieve slice dynamically from server...",
+    print("Trying to retrieve slice dynamically from server...")
     # Check IcePy version as this internal function changes between version.
     # In case it breaks with future versions use slice2py and search for
     # "IcePy.Operation('getSlice'," for updates in the generated bindings.
