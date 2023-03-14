@@ -35,9 +35,9 @@ data = r.text
 cal = icalendar.Calendar.from_ical(data)
 
 start_date = datetime.datetime.now() - datetime.timedelta(minutes=30)
-end_date = datetime.datetime.now()
+now = datetime.datetime.now()
 
-print("Checking between {} and {}".format(start_date, end_date))
+print("Checking between {} and {}".format(start_date, now))
 
 selected_event = (None, None, None)
 
@@ -50,10 +50,9 @@ for event in cal.subcomponents:
     if end is None:
         end = start + datetime.timedelta(hours=2)
 
-    if start > start_date and end < end_date:
+    if end > now and start < start_date:
         print("{} - {}: {}".format(start, end, event.decoded("summary")))
         selected_event = (event, start, end)
 
 
 set_mumble(*selected_event)
-
