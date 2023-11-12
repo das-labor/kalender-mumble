@@ -18,12 +18,13 @@ def set_mumble(event, start, end):
         relname = None
         if start > now:
             timediff = start - now
-            relname = "in {} minuten".format(timediff.total_seconds() // 60)
+            relname = "in {} minuten".format(int(timediff.total_seconds() // 60))
         else:
             timediff = end - now
-            relname = "noch {} minuten".format(timediff.total_seconds() // 60)
+            relname = "noch {} minuten".format(int(timediff.total_seconds() // 60))
 
-        state.name = "[{}] Veranstaltung: {}".format(relname, event.decoded("summary"))
+        summary = event.decoded("summary").decode()
+        state.name = "[{}] Veranstaltung: {}".format(relname, summary)
     else:
         state.name = "Veranstaltung: Keine Aktive Veranstaltung"
 
