@@ -51,7 +51,7 @@ for event in cal.subcomponents:
     if end is None:
         end = start + datetime.timedelta(hours=2)
 
-    if end > now and start < start_date:
+    if end > now and now > start - datetime.timedelta(minutes=30):
         print("{} - {}: {}".format(start, end, event.decoded("summary")))
         selected_event = (event, start, end)
 
