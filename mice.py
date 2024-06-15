@@ -104,7 +104,7 @@ except Exception as e:
     print("Failed")
     print(str(e))
     while not os.path.exists(slicefile):
-        slicefile = raw_input("Path to slicefile: ")
+        slicefile = input("Path to slicefile: ")
     print("Load slice (%s)..." % slicefile)
     Ice.loadSlice('', slicedir + [slicefile])
     print("Done")
