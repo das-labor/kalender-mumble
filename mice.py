@@ -110,6 +110,7 @@ except Exception as e:
     print("Done")
 
 print("Import dynamically compiled MumbleServer class...")
+# noinspection PyUnresolvedReferences
 import MumbleServer
 
 print("Done")

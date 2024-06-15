@@ -5,6 +5,7 @@ import requests
 import icalendar
 import os
 
+
 def set_mumble(event, start, end):
     import mice
 
@@ -12,10 +13,7 @@ def set_mumble(event, start, end):
     state = s.getChannelState(int(os.environ['CHANNEL_ID']))
     now = datetime.datetime.now()
 
-
     if event is not None:
-
-        relname = None
         if start > now:
             timediff = start - now
             relname = "in {} minuten".format(int(timediff.total_seconds() // 60))
@@ -29,6 +27,7 @@ def set_mumble(event, start, end):
         state.name = "Veranstaltung: Keine Aktive Veranstaltung"
 
     s.setChannelState(state)
+
 
 r = requests.get("https://das-labor.org/termine.ics")
 data = r.text
@@ -51,9 +50,8 @@ for event in cal.subcomponents:
     if end is None:
         end = start + datetime.timedelta(hours=2)
 
-    if end > now and now > start - datetime.timedelta(minutes=30):
+    if end > now > start - datetime.timedelta(minutes=30):
         print("{} - {}: {}".format(start, end, event.decoded("summary")))
         selected_event = (event, start, end)
-
 
 set_mumble(*selected_event)
