@@ -30,7 +30,7 @@
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #
-#    mice.py - Minimal script to interact with murmurs' ice
+#    mice.py - Minimal script to interact with mumble-server's ice
 #              interface, use 'python -i' or a tool like idle
 #              to run this script either directly or via 'import mice'.
 #              Configure by placing a mice_config.py in the import path.
@@ -50,7 +50,7 @@ except ImportError:
     host = "127.0.0.1"
     port = 6502
     prxstr = "Meta:tcp -h %s -p %d -t 1000" % (host, port)
-    slicefile = "Murmur.ice"
+    slicefile = "MumbleServer.ice"
     secret = os.environ['ICE_PASSWORD']
 
 print("Import ice...")
@@ -109,8 +109,8 @@ except Exception as e:
     Ice.loadSlice('', slicedir + [slicefile])
     print("Done")
 
-print("Import dynamically compiled murmur class...")
-import Murmur
+print("Import dynamically compiled MumbleServer class...")
+import MumbleServer
 
 print("Done")
 print("Establish ice connection...")
@@ -119,7 +119,7 @@ if secret:
     print("[protected]...")
     ice.getImplicitContext().put("secret", secret)
 
-murmur = Murmur.MetaPrx.checkedCast(prx)
+murmur = MumbleServer.MetaPrx.checkedCast(prx)
 m = murmur
 print("Done")
 
@@ -128,11 +128,11 @@ if __name__ != "__main__":
 else:
     prefix = ""
 
-print("Murmur object accessible via '%smurmur' or '%sm'" % (prefix, prefix))
+print("MumbleServer object accessible via '%smurmur' or '%sm'" % (prefix, prefix))
 
 try:
     sl = m.getBootedServers()
-except Murmur.InvalidSecretException:
+except MumbleServer.InvalidSecretException:
     print("Error: Invalid ice secret. Mice won't work.")
 else:
     s = sl[0] if sl else None
